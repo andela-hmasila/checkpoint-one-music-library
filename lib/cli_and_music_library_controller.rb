@@ -33,9 +33,9 @@ class MusicLibraryController
   end
   def cli_start
     "
-    ========================
+    =*=*=*=*=*=*=*=*=*=*=*=*=
           Music Library
-    ========================
+    =*=*=*=*=*=*=*=*=*=*=*=*=
     "
   end
   def cli_commands

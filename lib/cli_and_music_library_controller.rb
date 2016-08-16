@@ -64,8 +64,8 @@ end
     6.) play song # play a particular song
 
     exit # quit Ruby Muse
-    ".colorize(:green)
-    puts call
+    "
+    
   end
 
 

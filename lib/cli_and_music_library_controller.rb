@@ -93,17 +93,21 @@ class MusicLibraryController
   def list_genre
     print "Enter a genre to list "
     genre = gets.chomp
-    Genre.all.each do
-      |genre|
-      puts "#{genre.name}"
+    genres = Genre.find_by_name(genre)
+    genres.songs.each do
+      |song|
+      puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
     end
   end
     def list_artist
       print "Enter an artist to list "
       artist = gets.chomp
-      Artist.find_by_name(artist) do
-        |artist|
-        puts "#{artist.name}"
+      artists = Artist.find_by_name(artist)
+      artists.songs.each do
+        |song|
+        puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
+
+
       end
     end
 

@@ -46,7 +46,7 @@ class MusicLibraryController
     4. list artist # lists a particular artist
     5. play song # play a particular song
 
-    exit # quit Ruby Muse
+    exit # exit Music Library
     "
 
 

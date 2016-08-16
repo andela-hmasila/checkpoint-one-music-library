@@ -69,22 +69,4 @@ end
   end
 
 
-
-
-
-
-
-=begin
-    #puts "Welcome to the Music Library".center
-    puts "Enter 'list songs' to list all songs\n
-    Enter 'list artists' to list all artists\n
-    Enter 'list artists' to list all artists\n
-    Enter 'list genres' to list all genres\n
-    Enter 'exit' to exit"
-
-
-=end
-
-
-
 end

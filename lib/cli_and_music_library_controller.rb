@@ -1,6 +1,7 @@
 # MusicLibraryController that contains the CLI and controllers
 class MusicLibraryController
   attr_reader(:path)
+  attr_accessor(:music_importer)
 
   def initialize(path = './db/mp3s')
     self.path = path if path
@@ -14,25 +15,22 @@ class MusicLibraryController
 
   def call
     puts cli_start
-    input = ''
-    while input != 'exit'
-      input = gets.chomp
-      if cli_options.include? input
-        send(cli_options[input])
-      elsif input == 'help'
-        puts cli_commands
+    loop do
+      user_input = gets.chomp
+      if prompt(user_input)
+        send(cli_options[user_input])
       else
         puts undefined
-        break if input == 'exit'
+        break if user_input == 'exit'
       end
-     end
     end
+  end
 
   def cli_start
     "
-    ========================
+    =*=*=*=*=*=*=*=*=*=*=*=*=
           Music Library
-    ========================
+    =*=*=*=*=*=*=*=*=*=*=*=*=
     "
   end
 
@@ -44,19 +42,23 @@ class MusicLibraryController
     4. list artist\t #lists a particular artist
     5. play song\t #play a particular song
 
-    exit\t #quit Ruby Muse
+    exit\t #exit Music Library
     "
   end
 
   def cli_options
     {
-      'list songs' => :list_songs ,
+      'list songs' => :list_songs,
       'list artists' => :list_artists,
       'list genres' => :list_genres,
       'play song' => :play_song,
       'list artist' => :list_artist,
       'list genre' => :list_genre
     }
+  end
+
+  def prompt(input)
+    cli_options.include? input
   end
 
   def list_songs
@@ -106,3 +108,6 @@ class MusicLibraryController
     puts 'I did not understand you'
     cli_commands
   end
+end
+ ms = MusicLibraryController.new('.\spec\fixtures\mp3s')
+ ms.call

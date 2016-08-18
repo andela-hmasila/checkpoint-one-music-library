@@ -1,32 +1,24 @@
-# MusicLibraryController that contains the CLI and controllers
 class MusicLibraryController
   attr_reader(:path)
   attr_accessor(:music_importer)
 
   def initialize(path = './db/mp3s')
-    self.path = path if path
-  end
-
-  def path=(file_path)
-    @path = file_path
-    @music_importer = MusicImporter.new(file_path)
+    @music_importer = MusicImporter.new(path)
     @music_importer.import
   end
 
   def call
     puts cli_start
     loop do
+      prompt
       user_input = gets.chomp
-      if prompt(user_input)
-        send(cli_options[user_input])
-      else
-        puts undefined
-        break if user_input == 'exit'
-      end
+      check_input(user_input) ? send(cli_options[user_input]) : undefined
+      break if user_input == 'exit'
     end
   end
 
   def cli_start
+
     "
     =*=*=*=*=*=*=*=*=*=*=*=*=
           Music Library
@@ -46,6 +38,12 @@ class MusicLibraryController
     "
   end
 
+  def prompt
+    puts cli_commands
+    print '<Groove>'
+
+  end
+
   def cli_options
     {
       'list songs' => :list_songs,
@@ -57,7 +55,7 @@ class MusicLibraryController
     }
   end
 
-  def prompt(input)
+  def check_input(input)
     cli_options.include? input
   end
 
@@ -83,15 +81,23 @@ class MusicLibraryController
     puts 'Enter a song to play '
     song_number = gets.chomp
     song = Song.all[song_number.to_i - 1]
-    puts "Playing #{song.artist.name} - #{song.name} - #{song.genre.name}"
+    if song
+      puts "Playing #{song.artist.name} - #{song.name} - #{song.genre.name}"
+    else
+      puts "The song number #{song_number} could not be found"
+    end
   end
 
   def list_genre
     print 'Enter a genre to list '
     genre = gets.chomp
     genres = Genre.find_by_name(genre)
-    genres.songs.each do |song|
-      puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
+    if genres
+      genres.songs.each do |song|
+        puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
+      end
+    else
+      puts "#{genre} not found"
     end
   end
 
@@ -99,15 +105,16 @@ class MusicLibraryController
     print 'Enter an artist to list '
     artist = gets.chomp
     artists = Artist.find_by_name(artist)
-    artists.songs.each do |song|
-      puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
+    if artists
+      artists.songs.each{ |song| puts "#{song.artist.name} - #{song.name} - #{song.genre.name}" }
+    else
+      puts "#{artist} not found"
     end
   end
 
   def undefined
-    puts 'I did not understand you'
-    cli_commands
+    puts "I did not understand you"
   end
 end
- ms = MusicLibraryController.new('.\spec\fixtures\mp3s')
- ms.call
+# ms = MusicLibraryController.new('.\spec\fixtures\mp3s')
+# ms.call

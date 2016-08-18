@@ -1,12 +1,11 @@
-module Concerns::Findable
-  #Finds all occurences of a name
-  def find_by_name(name)
-    all.find { |s| s.name == name }
-  end
+module Concerns
+  module Findable
+    def find_by_name(name)
+      all.detect {|element| element.name.downcase == name.downcase}
+    end
 
-  #checks if the name is found in the array and if not creates it
-  def find_or_create_by_name(name)
-    find_by_name(name) || create(name)
+    def find_or_create_by_name(name)
+      find_by_name(name) || create(name)
+    end
   end
-
 end

@@ -1,10 +1,8 @@
-# Artist class that initializes an artist and its properties
 class Artist
   extend Concerns::Findable
 
-  attr_accessor(:name)
-  attr_reader(:songs)
-  # @@all is a class variable that saves all instances of the Song class
+  attr_accessor :name
+  attr_reader :songs
   @@all = []
 
   def initialize(name)
@@ -12,39 +10,33 @@ class Artist
     @songs = []
   end
 
-  # a custom constructor that instantiates an instance
-  # using .new and saves that instance
   def self.create(name)
     Artist.new(name).save
   end
 
-  # saves the instance
   def save
     @@all << self
     self
   end
 
-  # returns all the saved instances
   def self.all
     @@all
   end
 
-  # emptys @@all
   def self.destroy_all
     @@all = []
   end
 
-  # adding a song to an artist
   def add_song(song)
     @songs << song unless @songs.include? song
     song.artist = self unless song.artist
   end
 
   def genres
-    song_genres = []
+    artist_genres = []
     @songs.each do |song|
-      song_genres << song.genre unless song_genres.include? song.genre
+      artist_genres << song.genre unless artist_genres.include? song.genre
     end
-    song_genres
+    artist_genres
   end
 end

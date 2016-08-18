@@ -1,3 +1,4 @@
+require 'colorize'
 class MusicLibraryController
   attr_reader(:path)
   attr_accessor(:music_importer)
@@ -12,8 +13,8 @@ class MusicLibraryController
     loop do
       prompt
       user_input = gets.chomp
-      check_input(user_input) ? send(cli_options[user_input]) : undefined
       break if user_input == 'exit'
+      check_input(user_input) ? send(cli_options[user_input]) : undefined
     end
   end
 
@@ -23,25 +24,24 @@ class MusicLibraryController
     =*=*=*=*=*=*=*=*=*=*=*=*=
           Music Library
     =*=*=*=*=*=*=*=*=*=*=*=*=
-    "
+    ".cyan
   end
 
   def cli_commands
-    "Commands:
+    puts "Commands:
     1. list songs\t #lists all songs
     2. list genres\t #lists all genres
     3. list genre\t #lists a particular genre
     4. list artist\t #lists a particular artist
     5. play song\t #play a particular song
+    6. home\t #go to the home screen
 
     exit\t #exit Music Library
-    "
+    ".green
   end
 
   def prompt
-    puts cli_commands
     print '<Groove>'
-
   end
 
   def cli_options
@@ -51,7 +51,8 @@ class MusicLibraryController
       'list genres' => :list_genres,
       'play song' => :play_song,
       'list artist' => :list_artist,
-      'list genre' => :list_genre
+      'list genre' => :list_genre,
+      'home' => :cli_commands
     }
   end
 
@@ -60,25 +61,21 @@ class MusicLibraryController
   end
 
   def list_songs
-    Song.all.each_with_index do |song, idx|
-      puts "#{idx + 1}. #{song.artist.name} - #{song.name} - #{song.genre.name}"
+    Song.all.each_with_index do |song, index|
+      puts "#{index + 1}. #{song.artist.name} - #{song.name} - #{song.genre.name}"
     end
   end
 
   def list_artists
-    Artist.all.each do |artist|
-      puts artist.name.to_s
-    end
+    Artist.all.each {|artist| puts artist.name.to_s}
   end
 
   def list_genres
-    Genre.all.each do |genre|
-      puts genre.name.to_s
-    end
+    Genre.all.each {|genre| puts genre.name.to_s}
   end
 
   def play_song
-    puts 'Enter a song to play '
+    puts 'Enter a number to play '
     song_number = gets.chomp
     song = Song.all[song_number.to_i - 1]
     if song
@@ -113,7 +110,8 @@ class MusicLibraryController
   end
 
   def undefined
-    puts "I did not understand you"
+    puts "Command not found!!".yellow
+    cli_commands
   end
 end
 # ms = MusicLibraryController.new('.\spec\fixtures\mp3s')

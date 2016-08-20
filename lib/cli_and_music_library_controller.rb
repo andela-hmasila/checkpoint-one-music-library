@@ -1,11 +1,9 @@
 require 'colorize'
 class MusicLibraryController
   attr_reader(:path)
-  attr_accessor(:music_importer)
 
   def initialize(path = './db/mp3s')
-    @music_importer = MusicImporter.new(path)
-    @music_importer.import
+    MusicImporter.new(path).import
   end
 
   def call
@@ -14,7 +12,11 @@ class MusicLibraryController
       prompt
       user_input = gets.chomp
       break if user_input == 'exit'
-      check_input(user_input) ? send(cli_options[user_input]) : undefined
+      if check_input(user_input)
+        send(cli_options[user_input]) 
+      else
+        undefined
+      end
     end
   end
 
@@ -75,13 +77,11 @@ class MusicLibraryController
   end
 
   def play_song
-    puts 'Enter a number to play '
-    song_number = gets.chomp
-    song = Song.all[song_number.to_i - 1]
+    song = check_for_integer
     if song
       puts "Playing #{song.artist.name} - #{song.name} - #{song.genre.name}"
     else
-      puts "The song number #{song_number} could not be found"
+      puts "The song number could not be found"
     end
   end
 
@@ -110,8 +110,19 @@ class MusicLibraryController
   end
 
   def undefined
-    puts "Command not found!!".yellow
+    puts "Command not found!!".red
     cli_commands
+  end
+
+  def check_for_integer
+    puts 'Enter a number to play '
+    begin 
+      song_number = Integer(gets.chomp)
+    rescue
+      puts "Kindly enter an integer"
+      retry
+    end
+    Song.all[song_number.to_i - 1]
   end
 end
 # ms = MusicLibraryController.new('.\spec\fixtures\mp3s')

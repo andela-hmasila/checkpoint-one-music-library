@@ -33,10 +33,6 @@ class Genre
   end
 
   def artists
-    genre_artists = []
-    @songs.each do |song|
-      genre_artists << song.artist unless genre_artists.include? song.artist
-    end
-    genre_artists
-  end
+    @songs.map(&:artist).uniq
+   end
 end

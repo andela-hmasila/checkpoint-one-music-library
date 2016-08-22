@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/andela-hmasila/checkpoint-one-music-library.svg?branch=develop)](https://travis-ci.org/andela-hmasila/checkpoint-one-music-library)
+[![Code Climate](https://codeclimate.com/github/andela-hmasila/checkpoint-one-music-library/badges/gpa.svg)](https://codeclimate.com/github/andela-hmasila/checkpoint-one-music-library)
+[![Issue Count](https://codeclimate.com/github/andela-hmasila/checkpoint-one-music-library/badges/issue_count.svg)](https://codeclimate.com/github/andela-hmasila/checkpoint-one-music-library)
 #Music Library Application
 ![Groove on](http://classroom.tis.edu.mo/grade1/wp-content/uploads/sites/4/2016/06/music.jpg)
 

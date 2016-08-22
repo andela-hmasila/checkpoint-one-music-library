@@ -5,7 +5,7 @@
 #Music Library Application
 ![Groove on](http://classroom.tis.edu.mo/grade1/wp-content/uploads/sites/4/2016/06/music.jpg)
 
-##Overview
+##Project Description
 
 Music Library Application is a Command Line Interface that allows a user to import `.mp3` files from a path. 
 The user can then use commands to list all `songs`, `artists` or `genres`. It also allows a user to list songs based on a genre or artist. Lastly, a user can `play a song` ... not literally but a message that the song is playing will be displayed.

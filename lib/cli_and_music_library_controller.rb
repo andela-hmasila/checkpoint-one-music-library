@@ -1,49 +1,15 @@
 require 'colorize'
 class MusicLibraryController
-  attr_reader(:path)
+  attr_accessor :view
 
   def initialize(path = './db/mp3s')
     MusicImporter.new(path).import
+    @view = MusicLibraryView.new
   end
 
   def call
-    puts cli_start
-    loop do
-      prompt
-      user_input = gets.chomp
-      break if user_input == 'exit'
-      if check_input(user_input)
-        send(cli_options[user_input]) 
-      else
-        undefined
-      end
-    end
-  end
-
-  def cli_start
-
-    "
-    =*=*=*=*=*=*=*=*=*=*=*=*=
-          Music Library
-    =*=*=*=*=*=*=*=*=*=*=*=*=
-    ".cyan
-  end
-
-  def cli_commands
-    puts "Commands:
-    1. list songs\t #lists all songs
-    2. list genres\t #lists all genres
-    3. list genre\t #lists a particular genre
-    4. list artist\t #lists a particular artist
-    5. play song\t #play a particular song
-    6. home\t #go to the home screen
-
-    exit\t #exit Music Library
-    ".green
-  end
-
-  def prompt
-    print '<Groove>'
+    puts view.cli_start
+    check_input
   end
 
   def cli_options
@@ -58,22 +24,32 @@ class MusicLibraryController
     }
   end
 
-  def check_input(input)
-    cli_options.include? input
+  def check_input
+    loop do
+      view.prompt
+      user_input = gets.chomp
+      break if user_input == 'exit'
+      if cli_options.include? user_input
+        send(cli_options[user_input])
+      else
+        view.undefined
+      end
+    end
   end
 
   def list_songs
     Song.all.each_with_index do |song, index|
-      puts "#{index + 1}. #{song.artist.name} - #{song.name} - #{song.genre.name}"
+       puts "#{index + 1}. #{song.artist.name} - #{song.name}" \
+       " - #{song.genre.name}".green
     end
   end
 
   def list_artists
-    Artist.all.each {|artist| puts artist.name.to_s}
+    Artist.all.each { |artist| puts artist.name.to_s }
   end
 
   def list_genres
-    Genre.all.each {|genre| puts genre.name.to_s}
+    Genre.all.each { |genre| puts genre.name.to_s }
   end
 
   def play_song
@@ -94,29 +70,25 @@ class MusicLibraryController
         puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
       end
     else
-      puts "#{genre} not found"
+      puts "Genre not found"
     end
   end
 
   def list_artist
     print 'Enter an artist to list '
-    artist = gets.chomp
-    artists = Artist.find_by_name(artist)
-    if artists
-      artists.songs.each{ |song| puts "#{song.artist.name} - #{song.name} - #{song.genre.name}" }
+    artist = Artist.find_by_name(gets.chomp)
+    if artist
+      artist.songs.each do |song|
+        puts "#{song.artist.name} - #{song.name} - #{song.genre.name}"
+      end
     else
-      puts "#{artist} not found"
+      puts "Artist not found"
     end
   end
 
-  def undefined
-    puts "Command not found!!".red
-    cli_commands
-  end
-
   def check_for_integer
-    puts 'Enter a number to play '
-    begin 
+    print "Enter a number to play "
+    begin
       song_number = Integer(gets.chomp)
     rescue
       puts "Kindly enter an integer"
@@ -125,5 +97,3 @@ class MusicLibraryController
     Song.all[song_number.to_i - 1]
   end
 end
-# ms = MusicLibraryController.new('.\spec\fixtures\mp3s')
-# ms.call

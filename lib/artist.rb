@@ -1,5 +1,6 @@
 class Artist
   extend Concerns::Findable
+  extend Concerns::Base_functions
 
   attr_accessor :name
   attr_reader :songs
@@ -10,21 +11,9 @@ class Artist
     @songs = []
   end
 
-  def self.create(name)
-    Artist.new(name).save
-  end
-
   def save
     @@all << self
     self
-  end
-
-  def self.all
-    @@all
-  end
-
-  def self.destroy_all
-    @@all = []
   end
 
   def add_song(song)

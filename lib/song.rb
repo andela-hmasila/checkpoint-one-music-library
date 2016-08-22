@@ -1,5 +1,6 @@
 class Song
   extend Concerns::Findable
+  extend Concerns::Base_functions
 
   attr_accessor :name
   attr_reader :artist, :genre
@@ -11,21 +12,9 @@ class Song
     self.artist = artist if artist
   end
 
-  def self.create(name, artist = nil, genre = nil)
-    new(name, artist, genre).save
-  end
-
   def save
     @@all << self
     self
-  end
-
-  def self.all
-    @@all
-  end
-
-  def self.destroy_all
-    @@all = []
   end
 
   def genre=(song_genre)

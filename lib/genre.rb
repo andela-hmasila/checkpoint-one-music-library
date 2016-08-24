@@ -1,6 +1,6 @@
 class Genre
   extend Concerns::Findable
-  extend Concerns::Base_functions
+  extend Concerns::BaseFunctions
 
   attr_accessor(:name)
   attr_reader(:songs)
@@ -23,5 +23,5 @@ class Genre
 
   def artists
     @songs.map(&:artist).uniq
-   end
+  end
 end

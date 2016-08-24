@@ -1,5 +1,5 @@
 module Concerns	
-  module Base_functions
+  module BaseFunctions
 
 	def create(name)
 	  new(name).save

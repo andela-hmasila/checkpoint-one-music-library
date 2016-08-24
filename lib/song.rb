@@ -1,6 +1,6 @@
 class Song
   extend Concerns::Findable
-  extend Concerns::Base_functions
+  extend Concerns::BaseFunctions
 
   attr_accessor :name
   attr_reader :artist, :genre
@@ -30,8 +30,8 @@ class Song
   def self.new_from_filename(filename)
     song_instance = filename.gsub(".mp3", "").split(' - ')
     new(song_instance[1],
-             Artist.find_or_create_by_name(song_instance[0]),
-             Genre.find_or_create_by_name(song_instance[2]))
+        Artist.find_or_create_by_name(song_instance[0]),
+        Genre.find_or_create_by_name(song_instance[2]))
   end
 
   def self.create_from_filename(filename)

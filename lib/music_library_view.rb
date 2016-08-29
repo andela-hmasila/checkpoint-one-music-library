@@ -3,7 +3,7 @@ class MusicLibraryView
   def cli_start
     puts "
     =*=*=*=*=*=*=*=*=*=*=*=*=
-          Music Library
+       Groove On 
     =*=*=*=*=*=*=*=*=*=*=*=*=
     ".cyan
   end
@@ -21,7 +21,7 @@ class MusicLibraryView
   end
 
   def prompt
-    print '<Groove>'
+    print '<Groove>'.cyan
   end
 
   def undefined
@@ -65,7 +65,7 @@ class MusicLibraryView
   end
 
   def follow_up_question(song_object)
-    puts "Kindly Enter #{song_object}".green
+    puts "Kindly Enter #{song_object}".yellow
   end
 
   def object_not_found(song_object)

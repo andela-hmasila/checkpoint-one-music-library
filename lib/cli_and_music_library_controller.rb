@@ -8,9 +8,10 @@ class MusicLibraryController
 
   def call
     view.cli_start
+    view.cli_commands
     application_loop
   end
-   
+
   def application_loop
     loop do
       view.prompt

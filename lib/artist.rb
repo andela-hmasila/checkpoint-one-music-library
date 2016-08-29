@@ -1,6 +1,7 @@
 class Artist
   extend Concerns::Findable
   extend Concerns::BaseFunctions
+  include Concerns::MusicStoreActions
 
   attr_accessor :name
   attr_reader :songs
@@ -11,13 +12,8 @@ class Artist
     @songs = []
   end
 
-  def save
-    @@all << self
-    self
-  end
-
   def add_song(song)
-    @songs << song unless @songs.include? song
+    add_current_song(song)
     song.artist = self unless song.artist
   end
 

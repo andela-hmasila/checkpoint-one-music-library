@@ -15,7 +15,6 @@ class MusicLibraryView
     3. list genre\t #lists a particular genre
     4. list artist\t #lists a particular artist
     5. play song\t #play a particular song
-    6. home\t #go to the home screen
     exit\t #exit Music Library
     ".green
   end

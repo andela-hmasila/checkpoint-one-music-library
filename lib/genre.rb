@@ -1,7 +1,6 @@
 class Genre
   extend Concerns::Findable
   extend Concerns::BaseFunctions
-  include Concerns::MusicStoreActions
 
   attr_accessor(:name)
   attr_reader(:songs)
@@ -12,8 +11,13 @@ class Genre
     @songs = []
   end
 
+  def save
+    @@all << self
+    self
+  end
+
   def add_song(song)
-    add_current_song(song)
+    @songs << song unless @songs.include? song
     song.genre = self unless song.genre
   end
 

@@ -3,7 +3,7 @@ class MusicLibraryView
   def cli_start
     puts "
     =*=*=*=*=*=*=*=*=*=*=*=*=
-       Groove On 
+          Music Library
     =*=*=*=*=*=*=*=*=*=*=*=*=
     ".cyan
   end
@@ -21,7 +21,7 @@ class MusicLibraryView
   end
 
   def prompt
-    print '<Groove>'.cyan
+    print '<Groove>'
   end
 
   def undefined
@@ -31,8 +31,8 @@ class MusicLibraryView
 
   def list_songs
     Song.all.each_with_index do |song, index|
-      puts "#{index + 1}. #{song.artist.name} - #{song.name}" \
-      " - #{song.genre.name}".light_blue
+       puts "#{index + 1}. #{song.artist.name} - #{song.name}" \
+       " - #{song.genre.name}".light_blue
     end
   end
 
@@ -44,31 +44,50 @@ class MusicLibraryView
     Genre.all.each { |genre| puts genre.name.to_s.light_blue }
   end
 
-  def songs_by_category(category)
-    if category
-      category.songs.each do |song|
-        puts "#{song.artist.name} - #{song.name}" \
-        " - #{song.genre.name}".light_blue
-      end
-    else
-      object_not_found(category.to_s)
-    end
-  end
-
-  def playing_song(song)
+  def play_song
+    song = check_for_integer
     if song
       puts "Playing #{song.artist.name} - #{song.name}" \
       " - #{song.genre.name}".light_blue
     else
-      object_not_found("song")
+      puts "The song number could not be found".red
     end
   end
 
-  def follow_up_question(song_object)
-    puts "Kindly Enter #{song_object}".yellow
+  def songs_by_genre
+    print "Enter a genre to list ".green
+    genre = Genre.find_by_name(gets.chomp.strip)
+    if genre
+      genre.songs.each do |song|
+        puts "#{song.artist.name} - #{song.name}" \
+        " - #{song.genre.name}".light_blue
+      end
+    else
+      puts "Genre not found".red
+    end
   end
 
-  def object_not_found(song_object)
-    puts "#{song_object} not found".red
+  def songs_by_artist
+    print "Enter an artist to list ".green
+    artist = Artist.find_by_name(gets.chomp.strip)
+    if artist
+      artist.songs.each do |song|
+        puts "#{song.artist.name} - #{song.name}" \
+        " - #{song.genre.name}".light_blue
+      end
+    else
+      puts "Artist not found".red
+    end
+  end
+
+  def check_for_integer
+    print "Enter a number to play ".green
+    begin
+      song_number = Integer(gets.chomp.strip)
+    rescue
+      puts "Kindly enter an integer".red
+      retry
+    end
+    Song.all[song_number.to_i - 1]
   end
 end

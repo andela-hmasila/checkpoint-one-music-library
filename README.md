@@ -10,6 +10,12 @@
 Music Library Application is a Command Line Interface that allows a user to import `.mp3` files from a path. 
 The user can then use commands to list all `songs`, `artists` or `genres`. It also allows a user to list songs based on a genre or artist. Lastly, a user can `play a song` ... not literally but a message that the song is playing will be displayed.
 
+## Prerequisities
+
+  1. [Ruby](https://github.com/rbenv/rbenv)
+  2. [Bundler](http://bundler.io/)
+  3. [RSpec](http://rspec.info/)
+
 ##Commands and Features
 The commands are:
     

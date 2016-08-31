@@ -1,21 +1,23 @@
 require 'colorize'
-class MusicLibraryView
-  def cli_start
+class CLI
+  $song_path = "./db/Adele_Send_My_Love_To_Your_New_Lover.mp3"
+  def start
     puts "
     =*=*=*=*=*=*=*=*=*=*=*=*=
-       Groove On 
+       Groove On
     =*=*=*=*=*=*=*=*=*=*=*=*=
     ".cyan
   end
 
-  def cli_commands
+  def commands
     puts "Commands:
     1. list songs\t #lists all songs
     2. list genres\t #lists all genres
-    3. list genre\t #lists a particular genre
+    3. list artists\t #lists a artists
     4. list artist\t #lists a particular artist
-    5. play song\t #play a particular song
-    6. home\t #go to the home screen
+    5. list genre\t #lists a particular genre
+    6. play song\t #play a particular song
+    7. stop song\t #stops the song that is playing
     exit\t #exit Music Library
     ".green
   end
@@ -26,7 +28,7 @@ class MusicLibraryView
 
   def undefined
     puts "Command not found!!".red
-    cli_commands
+    commands
   end
 
   def list_songs
@@ -55,6 +57,18 @@ class MusicLibraryView
     end
   end
 
+  def play_song_for_real
+    @pid = fork { exec 'afplay', $song_path }
+  end
+
+  def stop_song
+    if process_running?
+      fork { exec 'killall afplay' }
+    else
+      puts "Play song first!".red
+    end
+  end
+
   def playing_song(song)
     if song
       puts "Playing #{song.artist.name} - #{song.name}" \
@@ -64,11 +78,16 @@ class MusicLibraryView
     end
   end
 
-  def follow_up_question(song_object)
+  def follow_up_prompt(song_object)
     puts "Kindly Enter #{song_object}".yellow
   end
 
   def object_not_found(song_object)
     puts "#{song_object} not found".red
+  end
+
+  def process_running?
+    return true if @pid
+    false
   end
 end

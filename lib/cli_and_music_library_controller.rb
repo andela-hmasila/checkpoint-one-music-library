@@ -48,7 +48,7 @@ class MusicLibraryController
       'list genres' => :list_genres,
       'play song' => :play_song,
       'list artist' => :list_artist,
-      'list genre' => :list_genre,
+      'list genre' => :list_genre
     }
   end
 

@@ -12,9 +12,10 @@ class MusicLibraryView
     puts "Commands:
     1. list songs\t #lists all songs
     2. list genres\t #lists all genres
-    3. list genre\t #lists a particular genre
+    3. list artists\t #lists a artists
     4. list artist\t #lists a particular artist
-    5. play song\t #play a particular song
+    5. list genre\t #lists a particular genre
+    6. play song\t #play a particular song
     exit\t #exit Music Library
     ".green
   end
@@ -62,6 +63,9 @@ class MusicLibraryView
       object_not_found("song")
     end
   end
+  # TODO:
+  # system "afplay `/filename` "
+  # implement real playing!!
 
   def follow_up_question(song_object)
     puts "Kindly Enter #{song_object}".yellow

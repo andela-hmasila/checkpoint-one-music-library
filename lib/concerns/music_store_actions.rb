@@ -1,6 +1,6 @@
 module Concerns
-	module MusicStoreActions
-		def save
+  module MusicStoreActions
+	  def save
 	    self.class.all << self
 	    self
     end

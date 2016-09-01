@@ -7,6 +7,7 @@ class CLI
        Groove On
     =*=*=*=*=*=*=*=*=*=*=*=*=
     ".cyan
+    commands
   end
 
   def commands
@@ -23,7 +24,7 @@ class CLI
   end
 
   def prompt
-    print '<Groove>'.cyan
+    print "<Groove>".cyan
   end
 
   def undefined
@@ -31,63 +32,33 @@ class CLI
     commands
   end
 
-  def list_songs
-    Song.all.each_with_index do |song, index|
-      puts "#{index + 1}. #{song.artist.name} - #{song.name}" \
+  def list_songs(song, index)
+    puts "#{index + 1}. #{song.artist.name} - #{song.name}" \
       " - #{song.genre.name}".light_blue
-    end
   end
 
-  def list_artists
-    Artist.all.each { |artist| puts artist.name.to_s.light_blue }
+  def list_artists(artist)
+    puts artist.name.to_s.light_blue
   end
 
-  def list_genres
-    Genre.all.each { |genre| puts genre.name.to_s.light_blue }
+  def list_genres(genre)
+    puts genre.name.to_s.light_blue
   end
 
-  def songs_by_category(category)
-    if category
-      category.songs.each do |song|
-        puts "#{song.artist.name} - #{song.name}" \
-        " - #{song.genre.name}".light_blue
-      end
-    else
-      object_not_found(category.to_s)
-    end
-  end
-
-  def play_song_for_real
-    @pid = fork { exec 'afplay', $song_path }
-  end
-
-  def stop_song
-    if process_running?
-      fork { exec 'killall afplay' }
-    else
-      puts "Play song first!".red
-    end
+  def songs_by_category(song)
+    puts "#{song.artist.name} - #{song.name} - #{song.genre.name}".light_blue
   end
 
   def playing_song(song)
-    if song
-      puts "Playing #{song.artist.name} - #{song.name}" \
+    puts "Playing #{song.artist.name} - #{song.name}" \
       " - #{song.genre.name}".light_blue
-    else
-      object_not_found("song")
-    end
   end
 
-  def follow_up_prompt(song_object)
-    puts "Kindly Enter #{song_object}".yellow
+  def follow_up_prompt(additional_input)
+    puts "Kindly Enter #{additional_input}".yellow
   end
 
-  def object_not_found(song_object)
-    puts "#{song_object} not found".red
-  end
-
-  def process_running?
-    return true if @pid
-    false
+  def not_found(user_input)
+    puts "#{user_input} not found".red
   end
 end

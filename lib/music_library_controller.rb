@@ -8,7 +8,6 @@ class MusicLibraryController
 
   def call
     cli.start
-    cli.commands
     application_loop
   end
 
@@ -22,84 +21,80 @@ class MusicLibraryController
   end
 
   def check_input(command)
-    if options.include? command
-      check_for_additional_input(command)
-      send(options[command])
-    else
+    send(command.tr(" ", "_"))
+    rescue NoMethodError
       cli.undefined
-    end
-  end
-
-  def check_for_additional_input(command)
-    return if ["list songs", "list artists", "list genres", "stop song"] \
-              .include? command
-    song_object = if command == "play song"
-      "song number"
-    else
-      command.gsub("list ", "")
-    end
-    cli.follow_up_prompt(song_object)
-  end
-
-  def options
-    {
-      'list songs' => :list_songs,
-      'list artists' => :list_artists,
-      'list genres' => :list_genres,
-      'play song' => :play_song,
-      'list artist' => :list_artist,
-      'list genre' => :list_genre,
-      'stop song' => :stop_song
-    }
   end
 
   def list_songs
-    cli.list_songs
+    Song.all.each_with_index do |song, index|
+      cli.list_songs(song, index)
+    end
   end
 
   def list_artists
-    cli.list_artists
+    Artist.all.each { |artist| cli.list_artists(artist) }
   end
 
   def list_genres
-    cli.list_genres
+    Genre.all.each { |genre| cli.list_genres(genre) }
   end
 
   def list_genre
-    cli.songs_by_category(Genre.find_by_name(gets.chomp.strip))
+    cli.follow_up_prompt("a genre")
+    genre = gets.chomp.strip
+    songs_by_category(Genre.find_by_name(genre)) || cli.not_found(artist)
   end
 
   def list_artist
-    cli.songs_by_category(Artist.find_by_name(gets.chomp.strip))
+    cli.follow_up_prompt("an artist")
+    artist = gets.chomp.strip
+    songs_by_category(Artist.find_by_name(artist)) || cli.not_found(artist)
+  end
+
+  def songs_by_category(category)
+    if category
+      category.songs.each do |song|
+        cli.songs_by_category(song)
+      end
+    end
   end
 
   def play_song
+    cli.follow_up_prompt("a song number to play")
     song = check_song_number
-    cli.playing_song(song)
-    cli.play_song_for_real
+    if song
+      cli.playing_song(song)
+      play_song_for_real
+    else
+      cli.not_found("song")
+    end
   end
 
   def check_song_number
-    begin
-      song_number = Integer(gets.chomp.strip)
+    song_number = Integer(gets.chomp.strip)
+    if (1..Song.all.length).cover? song_number
+      Song.all[song_number.to_i - 1]
+    end
     rescue ArgumentError
-      exit if song_number == "exit"
       cli.follow_up_prompt("a valid integer")
       retry
-    end
-    get_song(song_number)
   end
 
-  def get_song(song_number)
-    if song_number > 0
-      Song.all[song_number.to_i - 1]
-    else
-      cli.follow_up_prompt("a valid integer")
-      check_song_number
-    end
+  def play_song_for_real
+    @process_id = fork { exec 'afplay', $song_path }
   end
 
   def stop_song
-    cli.stop_song
+    if process_running?
+      fork { exec 'killall afplay' }
+    else
+      cli.follow_up_prompt("a song to play first")
+    end
+  end
+
+  def process_running?
+    return true if @process_id
+    false
   end
 end

@@ -1,14 +1,11 @@
-class Song
-  extend Concerns::Findable
-  extend Concerns::BaseFunctions
-  include Concerns::MusicStoreActions
+class Song < Base
 
   attr_accessor :name
   attr_reader :artist, :genre
-  @@all = []
+  @all = []
 
   def initialize(name, artist = nil, genre = nil)
-    @name = name
+    super(name)
     self.genre = genre if genre
     self.artist = artist if artist
   end

@@ -43,7 +43,7 @@ class MusicLibraryController
   def list_genre
     cli.follow_up_prompt("a genre")
     genre = gets.chomp.strip
-    songs_by_category(Genre.find_by_name(genre)) || cli.not_found(artist)
+    songs_by_category(Genre.find_by_name(genre)) || cli.not_found(genre)
   end
 
   def list_artist
